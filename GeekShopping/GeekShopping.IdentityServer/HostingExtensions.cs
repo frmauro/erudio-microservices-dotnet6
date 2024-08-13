@@ -1,3 +1,4 @@
+using GeekShopping.IdentityServer.Initializer;
 using Serilog;
 
 namespace GeekShopping.IdentityServer
@@ -24,6 +25,8 @@ namespace GeekShopping.IdentityServer
                 .AddTestUsers(TestUsers.Users)
                 .AddDeveloperSigningCredential();
 
+            builder.Services.AddScoped<IDbInitializer, DbInitializer>();
+
             return builder.Build();
         }
 
@@ -48,5 +51,15 @@ namespace GeekShopping.IdentityServer
 
             return app;
         }
+
+
+        public static WebApplication ConfigureDb(this WebApplication app)
+        {
+
+            return app;
+        }
+
+
+
     }
 }

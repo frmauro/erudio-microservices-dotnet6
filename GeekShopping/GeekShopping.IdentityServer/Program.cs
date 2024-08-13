@@ -1,4 +1,5 @@
 ﻿using GeekShopping.IdentityServer;
+using GeekShopping.IdentityServer.Initializer;
 using GeekShopping.IdentityServer.Model;
 using GeekShopping.IdentityServer.Model.Context;
 using Microsoft.AspNetCore.Identity;
@@ -18,7 +19,7 @@ try
     builder.Host.UseSerilog((ctx, lc) => lc
         .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level}] {SourceContext}{NewLine}{Message:lj}{NewLine}{Exception}{NewLine}")
         .Enrich.FromLogContext()
-        .ReadFrom.Configuration(ctx.Configuration));
+        .ReadFrom.Configuration(ctx.Configuration), true);
 
     var connection = builder.Configuration["MySqlConnection:MySqlConnectionString"];
     builder.Services.AddDbContext<MySqlContext>(options => options.UseMySql(connection, new MySqlServerVersion(new Version(5, 7))));
@@ -27,9 +28,16 @@ try
         .AddEntityFrameworkStores<MySqlContext>()
         .AddDefaultTokenProviders();
 
+
+
     var app = builder
         .ConfigureServices()
         .ConfigurePipeline();
+
+    var serviceProvider = builder.Services.BuildServiceProvider();
+
+    var dbInicializer = serviceProvider.GetService<IDbInitializer>();
+    dbInicializer.Initialize();
 
     if (app.Environment.IsDevelopment())
     {
