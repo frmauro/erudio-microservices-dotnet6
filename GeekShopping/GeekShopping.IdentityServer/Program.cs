@@ -24,10 +24,10 @@ try
     var connection = builder.Configuration["MySqlConnection:MySqlConnectionString"];
     builder.Services.AddDbContext<MySqlContext>(options => options.UseMySql(connection, new MySqlServerVersion(new Version(5, 7))));
 
-    builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+    builder.Services
+        .AddIdentity<ApplicationUser, IdentityRole>()
         .AddEntityFrameworkStores<MySqlContext>()
         .AddDefaultTokenProviders();
-
 
 
     var app = builder
@@ -43,6 +43,7 @@ try
     {
     }
     app.UseHttpsRedirection();
+    app.UseIdentityServer();
     app.Run();
 }
 catch (Exception ex)

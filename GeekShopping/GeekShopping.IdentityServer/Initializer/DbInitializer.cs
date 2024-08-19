@@ -43,7 +43,8 @@ namespace GeekShopping.IdentityServer.Initializer
                 new Claim(JwtClaimTypes.Name, $"{admin.FirstName}{admin.LastName}"),
                 new Claim(JwtClaimTypes.GivenName, admin.FirstName),
                 new Claim(JwtClaimTypes.FamilyName, admin.LastName),
-                new Claim(JwtClaimTypes.Role, Config.Admin)
+                new Claim(JwtClaimTypes.Role, Config.Admin),
+                new Claim(JwtClaimTypes.Subject, Config.Admin),
             }).Result;
 
 
