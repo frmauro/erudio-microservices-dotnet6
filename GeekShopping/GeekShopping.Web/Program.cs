@@ -1,52 +1,46 @@
-using GeekShopping.Web.Services;
-using GeekShopping.Web.Services.IServices;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.OpenIdConnect;
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddHttpClient<IProductService, ProductService>(c => c.BaseAddress = new Uri(builder.Configuration["ServiceUrls:ProductAPI"]));
-builder.Services.AddControllersWithViews();
+builder.Services.AddRazorPages();
+
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultScheme = "Cookies";
     options.DefaultChallengeScheme = "oidc";
 })
-    .AddCookie("Cookies", c => c.ExpireTimeSpan = TimeSpan.FromMinutes(10))
+    .AddCookie("Cookies")
     .AddOpenIdConnect("oidc", options =>
-        {
-            options.Authority = builder.Configuration["ServiceUrls:IdentityServer"];
-            options.GetClaimsFromUserInfoEndpoint = true;
-            options.ClientId = "geek_shopping";
-            options.ClientSecret = "my_super_secret";
-            options.ResponseType = "code";
-            options.ClaimActions.MapJsonKey("role", "role", "role");
-            options.ClaimActions.MapJsonKey("sub", "sub", "sub");
-            options.TokenValidationParameters.NameClaimType = "name";
-            options.TokenValidationParameters.RoleClaimType = "role";
-            options.Scope.Add("geek_shopping");
-            options.SaveTokens = true;  
-        }
-    );
+    {
+        options.Authority = builder.Configuration["ServiceUrls:IdentityServer"];
+
+        options.ClientId = "geek_shopping";
+        options.ClientSecret = "secret";
+        options.ResponseType = "code";
+
+        options.Scope.Clear();
+        options.Scope.Add("openid");
+        options.Scope.Add("profile");
+
+        options.MapInboundClaims = false; // Don't rename claim types
+
+        options.SaveTokens = true;
+    });
+
+
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Home/Error");
+    app.UseExceptionHandler("/Error");
 }
-app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+app.MapRazorPages().RequireAuthorization();
 
 app.Run();

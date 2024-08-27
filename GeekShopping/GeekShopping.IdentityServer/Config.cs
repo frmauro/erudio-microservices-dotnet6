@@ -11,7 +11,7 @@ namespace GeekShopping.IdentityServer
             new List<IdentityResource>
             {
                new IdentityResources.OpenId(),
-               new IdentityResources.Email(),
+               //new IdentityResources.Email(),
                new IdentityResources.Profile(),
             };
 
@@ -31,10 +31,8 @@ namespace GeekShopping.IdentityServer
                     new Client
                         {
                             ClientId = "client",
-
                             // no interactive user, use the clientid/secret for authentication
                             AllowedGrantTypes = GrantTypes.ClientCredentials,
-
                             // secret for authentication
                             ClientSecrets =
                             {
@@ -42,13 +40,13 @@ namespace GeekShopping.IdentityServer
                             },
 
                             // scopes that client has access to
-                            AllowedScopes = { "read", "write", "profile" }
+                            AllowedScopes = { "geek_shopping" }
                         },
                     // interactive ASP.NET Core Web App
                         new Client
                         {
                             ClientId = "geek_shopping",
-                            ClientSecrets = { new Secret("my_super_secret".Sha256()) },
+                            ClientSecrets = { new Secret("secret".Sha256()) },
 
                             AllowedGrantTypes = GrantTypes.Code,
             
@@ -61,9 +59,7 @@ namespace GeekShopping.IdentityServer
                             AllowedScopes = new List<string> 
                             {
                                 IdentityServerConstants.StandardScopes.OpenId,
-                                IdentityServerConstants.StandardScopes.Profile,
-                                IdentityServerConstants.StandardScopes.Email,
-                                "geek_shopping"
+                                IdentityServerConstants.StandardScopes.Profile
                             }
                         }
                 };

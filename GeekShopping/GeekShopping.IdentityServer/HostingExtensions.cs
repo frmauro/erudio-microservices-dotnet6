@@ -1,4 +1,3 @@
-using GeekShopping.IdentityServer.Initializer;
 using Serilog;
 
 namespace GeekShopping.IdentityServer
@@ -10,22 +9,19 @@ namespace GeekShopping.IdentityServer
             // uncomment if you want to add a UI
             builder.Services.AddRazorPages();
 
-            builder.Services.AddIdentityServer(options =>
-                {
-                    // https://docs.duendesoftware.com/identityserver/v6/fundamentals/resources/api_scopes#authorization-based-on-scopes
-                    options.Events.RaiseErrorEvents = true;
-                    options.Events.RaiseInformationEvents = true;
-                    options.Events.RaiseFailureEvents = true;
-                    options.Events.RaiseSuccessEvents = true;
-                    options.EmitStaticAudienceClaim = true;
-                })
-                .AddInMemoryIdentityResources(Config.IdentityResources)
-                .AddInMemoryApiScopes(Config.ApiScopes)
-                .AddInMemoryClients(Config.Clients)
-                .AddTestUsers(TestUsers.Users)
-                .AddDeveloperSigningCredential();
+            //builder.Services
+            //        .AddIdentity<ApplicationUser, IdentityRole>()
+            //        .AddEntityFrameworkStores<MySqlContext>()
+            //        .AddDefaultTokenProviders();
 
-            builder.Services.AddScoped<IDbInitializer, DbInitializer>();
+            builder.Services.AddIdentityServer()
+            .AddInMemoryIdentityResources(Config.IdentityResources)
+            .AddInMemoryApiScopes(Config.ApiScopes)
+            .AddInMemoryClients(Config.Clients)
+            .AddTestUsers(TestUsers.Users);
+            //.AddDeveloperSigningCredential();
+
+            //builder.Services.AddScoped<IDbInitializer, DbInitializer>();
 
             return builder.Build();
         }

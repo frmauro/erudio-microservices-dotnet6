@@ -2,6 +2,7 @@
 using GeekShopping.IdentityServer.Initializer;
 using GeekShopping.IdentityServer.Model;
 using GeekShopping.IdentityServer.Model.Context;
+using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
@@ -21,13 +22,13 @@ try
         .Enrich.FromLogContext()
         .ReadFrom.Configuration(ctx.Configuration), true);
 
-    var connection = builder.Configuration["MySqlConnection:MySqlConnectionString"];
-    builder.Services.AddDbContext<MySqlContext>(options => options.UseMySql(connection, new MySqlServerVersion(new Version(5, 7))));
+    //var connection = builder.Configuration["MySqlConnection:MySqlConnectionString"];
+    //builder.Services.AddDbContext<MySqlContext>(options => options.UseMySql(connection, new MySqlServerVersion(new Version(5, 7))));
 
-    builder.Services
-        .AddIdentity<ApplicationUser, IdentityRole>()
-        .AddEntityFrameworkStores<MySqlContext>()
-        .AddDefaultTokenProviders();
+    //builder.Services
+    //    .AddIdentity<ApplicationUser, IdentityRole>()
+    //    .AddEntityFrameworkStores<MySqlContext>()
+    //    .AddDefaultTokenProviders();
 
 
     var app = builder
@@ -36,14 +37,14 @@ try
 
     var serviceProvider = builder.Services.BuildServiceProvider();
 
-    var dbInicializer = serviceProvider.GetService<IDbInitializer>();
-    dbInicializer.Initialize();
+    //var dbInicializer = serviceProvider.GetService<IDbInitializer>();
+    //dbInicializer.Initialize();
 
-    if (app.Environment.IsDevelopment())
-    {
-    }
-    app.UseHttpsRedirection();
-    app.UseIdentityServer();
+    //if (app.Environment.IsDevelopment())
+    //{
+    //}
+    //app.UseHttpsRedirection();
+
     app.Run();
 }
 catch (Exception ex)
