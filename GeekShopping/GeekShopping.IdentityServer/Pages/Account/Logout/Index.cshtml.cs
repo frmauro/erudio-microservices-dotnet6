@@ -18,9 +18,9 @@ namespace GeekShopping.IdentityServer.Pages.Logout;
 [AllowAnonymous]
 public class Index : PageModel
 {
-    private readonly UserManager<ApplicationUser> _userManager;
-    private readonly SignInManager<ApplicationUser> _signInManager;
-    private readonly RoleManager<IdentityRole> _roleManager;
+    //private readonly UserManager<ApplicationUser> _userManager;
+    //private readonly SignInManager<ApplicationUser> _signInManager;
+    //private readonly RoleManager<IdentityRole> _roleManager;
     private readonly IIdentityServerInteractionService _interaction;
     private readonly IEventService _events;
 
@@ -28,15 +28,15 @@ public class Index : PageModel
     public string? LogoutId { get; set; }
 
     public Index(
-        UserManager<ApplicationUser> userManager,
-        SignInManager<ApplicationUser> signInManager,
-        RoleManager<IdentityRole> roleManager,
+        //UserManager<ApplicationUser> userManager,
+        //SignInManager<ApplicationUser> signInManager,
+        //RoleManager<IdentityRole> roleManager,
         IIdentityServerInteractionService interaction, 
         IEventService events)
     {
-        _userManager = userManager;
-        _signInManager = signInManager;
-        _roleManager = roleManager;
+        //_userManager = userManager;
+        //_signInManager = signInManager;
+        //_roleManager = roleManager;
         _interaction = interaction;
         _events = events;
     }
@@ -82,7 +82,8 @@ public class Index : PageModel
             LogoutId ??= await _interaction.CreateLogoutContextAsync();
                 
             // delete local authentication cookie
-            await _signInManager.SignOutAsync();
+            //await _signInManager.SignOutAsync();
+            await HttpContext.SignOutAsync();
 
             // see if we need to trigger federated logout
             var idp = User.FindFirst(JwtClaimTypes.IdentityProvider)?.Value;
